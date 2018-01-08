@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+  <title>Demo</title>
+
+  <script src="../../lib/jquery.js"></script>
+  <script src="../../lib/shim.min.js"></script>
+  <script src="../../lib/zone.js"></script>
+  <script src="../../lib/typescript.js"></script>
+  <script src="../../lib/system.src.js"></script>
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+  <script src="../../lib/system.config.js"></script>
+  <script>
+      System.import('./main.ts');
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Demonstrating autofocus </p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div id='main_ts'>main.ts</div><div id='app_ts'>app.ts</div><div id='focus_ts'>focus.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { AppComponent  } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.ts'</span>;
+<span class="hljs-keyword">import</span> { Focus } <span class="hljs-keyword">from</span> <span class="hljs-string">'./focus.ts'</span>
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule ],
+    declarations: [ AppComponent, Focus ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-keyword">import</span> Focus <span class="hljs-keyword">from</span> <span class="hljs-string">'./focus.ts'</span>
+
+<span class="hljs-meta">@Component</span>({
+    selector: <span class="hljs-string">'app'</span>,
+    template: <span class="hljs-string">`
+      Look, this will be autofocused: &lt;input focus&gt;
+    `</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {}
+</code></pre><pre id='focus_ts-source'><code><span class="hljs-keyword">import</span> {Renderer, ElementRef, Directive} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+
+<span class="hljs-meta">@Directive</span>({
+  selector : <span class="hljs-string">'[focus]'</span>
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> Focus {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> renderer: Renderer, <span class="hljs-keyword">public</span> elementRef: ElementRef</span>) {}
+
+  ngOnInit() {
+    <span class="hljs-keyword">this</span>.renderer.invokeElementMethod(
+      <span class="hljs-keyword">this</span>.elementRef.nativeElement, <span class="hljs-string">'focus'</span>, []);
+  }
+}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+  function select(id){
+    $('.sources .active').removeClass('active')
+    $('#'+id).addClass('active')
+    $('#'+id+'-source').addClass('active')
+  }
+
+  $('.sourcenav > *').click(function(e){ select(this.id) })
+
+  select( $('#app_ts').length ? 'app_ts' : $('.sourcenav > *:first-child').attr('id') )
+
+  </script>
+</body>
+
+</html>

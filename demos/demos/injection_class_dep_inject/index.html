@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+  <title>Demo</title>
+
+  <script src="../../lib/jquery.js"></script>
+  <script src="../../lib/shim.min.js"></script>
+  <script src="../../lib/zone.js"></script>
+  <script src="../../lib/typescript.js"></script>
+  <script src="../../lib/system.src.js"></script>
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+  <script src="../../lib/system.config.js"></script>
+  <script>
+      System.import('./main.ts');
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>showing off dependency injection when the dependency has a dependency of its own.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div id='main_ts'>main.ts</div><div id='app_ts'>app.ts</div><div id='dependency_ts'>dependency.ts</div><div id='dependency2_ts'>dependency2.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> Dependency <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency.ts'</span>
+<span class="hljs-keyword">import</span> Dependency2 <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency2.ts'</span>
+
+<span class="hljs-keyword">import</span> { AppComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.ts'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule ],
+    declarations: [ AppComponent ],
+    bootstrap:    [ AppComponent ],
+    providers:    [ Dependency, Dependency2 ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> {Component} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+<span class="hljs-keyword">import</span> Dependency <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency.ts'</span>
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`Value from dependency: {{dep.foo.bar}}`</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> dep: Dependency</span>) {}
+}
+</code></pre><pre id='dependency_ts-source'><code><span class="hljs-keyword">import</span> {Injectable} <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>
+
+<span class="hljs-keyword">import</span> Dependency2 <span class="hljs-keyword">from</span> <span class="hljs-string">'./dependency2.ts'</span>
+
+<span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Dependency {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">public</span> foo:Dependency2</span>){}
+}</code></pre><pre id='dependency2_ts-source'><code><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> <span class="hljs-keyword">class</span> Dependency2 {
+  bar = <span class="hljs-string">'baz'</span>
+}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+  function select(id){
+    $('.sources .active').removeClass('active')
+    $('#'+id).addClass('active')
+    $('#'+id+'-source').addClass('active')
+  }
+
+  $('.sourcenav > *').click(function(e){ select(this.id) })
+
+  select( $('#app_ts').length ? 'app_ts' : $('.sourcenav > *:first-child').attr('id') )
+
+  </script>
+</body>
+
+</html>

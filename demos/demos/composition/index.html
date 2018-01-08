@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+  <title>Demo</title>
+
+  <script src="../../lib/jquery.js"></script>
+  <script src="../../lib/shim.min.js"></script>
+  <script src="../../lib/zone.js"></script>
+  <script src="../../lib/typescript.js"></script>
+  <script src="../../lib/system.src.js"></script>
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+  <script src="../../lib/system.config.js"></script>
+  <script>
+      System.import('./main.ts');
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Showing a simple component composition, three generations.</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div id='main_ts'>main.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule, Component }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;span&gt;Detail&lt;/span&gt;`</span>,
+  selector: <span class="hljs-string">'detail'</span>
+})
+<span class="hljs-keyword">class</span> Detail {}
+
+<span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;span&gt;Complex &lt;detail&gt;&lt;/detail&gt;&lt;/span&gt;`</span>,
+  selector: <span class="hljs-string">'complex'</span>,
+})
+<span class="hljs-keyword">class</span> Complex {}
+
+<span class="hljs-meta">@Component</span>({
+  template: <span class="hljs-string">`&lt;span&gt;Root &lt;complex&gt;&lt;/complex&gt;&lt;/span&gt;`</span>,
+  selector: <span class="hljs-string">'app'</span>,
+  styles: [<span class="hljs-string">':host /deep/ span { display: inline-block; border: 1px solid black; padding: 3px; }'</span>]
+})
+<span class="hljs-keyword">class</span> Root {}
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule ],
+    declarations: [ Root, Complex, Detail ],
+    bootstrap:    [ Root ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+  function select(id){
+    $('.sources .active').removeClass('active')
+    $('#'+id).addClass('active')
+    $('#'+id+'-source').addClass('active')
+  }
+
+  $('.sourcenav > *').click(function(e){ select(this.id) })
+
+  select( $('#app_ts').length ? 'app_ts' : $('.sourcenav > *:first-child').attr('id') )
+
+  </script>
+</body>
+
+</html>

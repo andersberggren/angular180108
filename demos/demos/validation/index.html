@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+  <script>document.write('<base href="' + document.location + '" />');</script>
+  <title>Demo</title>
+
+  <script src="../../lib/jquery.js"></script>
+  <script src="../../lib/shim.min.js"></script>
+  <script src="../../lib/zone.js"></script>
+  <script src="../../lib/typescript.js"></script>
+  <script src="../../lib/system.src.js"></script>
+  <script src="../../lib/web-animations.min.js"></script>
+
+  <link rel="stylesheet" href="../../lib/style.css">
+  <link rel="stylesheet" href="../../lib/codestyle.css">
+  <script src="../../lib/system.config.js"></script>
+  <script>
+      System.import('./main.ts');
+  </script>
+</head>
+
+<body>
+  <div class="wrapper">
+    <div>
+      <a href="../../index.html">&larr; back to demo index</a>
+      <div><p>Demonstrating custom validation (write a message containing &quot;darn&quot;)</p></div>
+      <app>loading...</app>
+    </div>
+    <div class="sources">
+      <div class="sourcenav"><div id='main_ts'>main.ts</div><div id='app_ts'>app.ts</div><div id='nocurses_ts'>nocurses.ts</div></div>
+      <div class="sourcefiles"><pre id='main_ts-source'><code><span class="hljs-keyword">import</span> { NgModule }      <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { BrowserModule } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;
+<span class="hljs-keyword">import</span> { FormsModule }   <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;
+<span class="hljs-keyword">import</span> { platformBrowserDynamic } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser-dynamic'</span>;
+
+<span class="hljs-keyword">import</span> { AppComponent  } <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.ts'</span>;
+<span class="hljs-keyword">import</span> { NoCurses }      <span class="hljs-keyword">from</span> <span class="hljs-string">'./nocurses.ts'</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+    imports:      [ BrowserModule, FormsModule ],
+    declarations: [ AppComponent, NoCurses ],
+    bootstrap:    [ AppComponent ]
+})
+<span class="hljs-keyword">class</span> AppModule {}
+
+platformBrowserDynamic().bootstrapModule(AppModule);
+</code></pre><pre id='app_ts-source'><code><span class="hljs-keyword">import</span> { Component } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+
+<span class="hljs-meta">@Component</span>({
+  selector: <span class="hljs-string">'app'</span>,
+  template: <span class="hljs-string">`
+    &lt;form (ngSubmit)="onSubmit(f.value.message)" #f="ngForm" novalidate&gt;
+      &lt;input
+        name="message"
+        required
+        ngModel
+        nocurses
+        placeholder="Enter your message"
+      &gt;
+      &lt;input type="submit" [disabled]="!f.form.valid" value="Submit"&gt;
+    &lt;/form&gt;
+    Last message: {{message}}
+  `</span>,
+  styles: [<span class="hljs-string">"input.ng-invalid {background-color: red;}"</span>]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  message: <span class="hljs-built_in">string</span>
+  onSubmit(message: <span class="hljs-built_in">string</span>){
+    <span class="hljs-keyword">this</span>.message = message
+  }
+}
+</code></pre><pre id='nocurses_ts-source'><code><span class="hljs-keyword">import</span> { Directive, forwardRef } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;
+<span class="hljs-keyword">import</span> { NG_VALIDATORS, FormControl } <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>
+
+<span class="hljs-meta">@Directive</span>({
+  selector: <span class="hljs-string">'[nocurses][ngModel]'</span>,
+  providers: [{
+    provide: NG_VALIDATORS,
+    useExisting: forwardRef(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> NoCurses),
+    multi: <span class="hljs-literal">true</span>
+  }]
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> NoCurses {
+  validate(ctrl: FormControl){
+    <span class="hljs-keyword">return</span> (ctrl.value||<span class="hljs-string">''</span>).toLowerCase().match(<span class="hljs-regexp">/darn/</span>) ? {
+      nocurses: { valid: <span class="hljs-literal">false</span> }
+    } : <span class="hljs-literal">null</span>;
+  }
+}</code></pre></div>
+    </div>
+  </div>
+  <script>
+
+  function select(id){
+    $('.sources .active').removeClass('active')
+    $('#'+id).addClass('active')
+    $('#'+id+'-source').addClass('active')
+  }
+
+  $('.sourcenav > *').click(function(e){ select(this.id) })
+
+  select( $('#app_ts').length ? 'app_ts' : $('.sourcenav > *:first-child').attr('id') )
+
+  </script>
+</body>
+
+</html>
