@@ -2,8 +2,11 @@ import {Adventure} from "./interfaces";
 
 export const myAdventure:Adventure = {
     gameName: "The Exciting Quest!",
+    initialGameState: {
+        currentSceneId: "corridor"
+    },
     scenes: {
-        start: {
+        corridor: {
             title: "A dark hallway",
             imgUrl: "https://static.pexels.com/photos/186181/pexels-photo-186181.jpeg",
             desc:

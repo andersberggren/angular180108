@@ -1,5 +1,6 @@
 export interface Adventure {
     gameName: string
+    initialGameState: GameState
     scenes: {
         [index: string]: Scene
     }
@@ -10,4 +11,8 @@ export interface Scene {
     imgUrl: string
     desc: string
     opts: string[]
+}
+
+export interface GameState {
+    currentSceneId: string
 }
