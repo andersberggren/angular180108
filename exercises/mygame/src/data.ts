@@ -3,7 +3,8 @@ import {Adventure} from "./interfaces";
 export const myAdventure:Adventure = {
     gameName: "The Exciting Quest!",
     initialGameState: {
-        currentSceneId: "corridor"
+        currentSceneId: "corridor",
+        gameOver: false
     },
     scenes: {
         corridor: {

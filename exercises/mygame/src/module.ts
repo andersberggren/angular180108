@@ -3,11 +3,11 @@
 import { NgModule }      from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent } from './app';
+import { AppComponent, ChildComponent } from './app';
 
 @NgModule({
     imports: [ BrowserModule ],
-    declarations: [ AppComponent ],
+    declarations: [ AppComponent, ChildComponent ],
     bootstrap: [ AppComponent ]
 })
 export class AppModule {}

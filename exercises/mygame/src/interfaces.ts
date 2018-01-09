@@ -20,4 +20,5 @@ export interface Option {
 
 export interface GameState {
     currentSceneId: string
+    gameOver: boolean
 }
