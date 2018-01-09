@@ -6,7 +6,7 @@ import { Scene, Option, GameState } from './interfaces';
   selector: 'app',
   template: `
     <h1>{{adventure.gameName}}</h1>
-    <scene [scene]="adventure.scenes[gameState.currentSceneId]" [gameOver]="gameState.gameOver"
+    <scene [scene]="adventure.scenes[gameState.currentSceneId]"
         (selectedOption)="changeScene($event)" (reset)="reset()"></scene>
   `,
   styles: [
@@ -53,9 +53,12 @@ export class AppComponent {
     'img {max-width: 250px; max-height: 200px;}'
   ]
 })
-export class ChildComponent {
+export class SceneComponent {
   @Input() scene: Scene;
-  @Input() gameOver: boolean;
   @Output() selectedOption = new EventEmitter<Option>();
   @Output() reset = new EventEmitter<void>();
+
+  get gameOver(): boolean {
+    return this.scene.opts.length == 0;
+  }
 }
