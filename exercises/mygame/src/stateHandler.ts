@@ -5,7 +5,7 @@ import { Scene, GameState, Option } from "./interfaces";
 @Injectable()
 export class StateHandler {
     private adventure = myAdventure;
-    private gameState: GameState;
+    gameState: GameState;
     private listeners: Function[] = [];
 
     constructor() {

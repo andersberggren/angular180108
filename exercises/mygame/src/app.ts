@@ -5,12 +5,19 @@ import { StateHandler } from './stateHandler';
 @Component({
   selector: 'app',
   template: `
-    <h1>{{stateHandler.gameName}}</h1>
-    <scene [scene]="currentScene"
-        (selectedOption)="changeScene($event)" (reset)="reset()"></scene>
+    <div [class.gameOver]="gameState.gameOver">
+      <h1>{{stateHandler.gameName}}</h1>
+      <scene [scene]="currentScene"
+             [gameOver]="gameState.gameOver"
+             (selectedOption)="changeScene($event)"
+             (reset)="reset()">
+      </scene>
+    </div>
   `,
   styles: [
-    'img {max-width: 250px; max-height: 200px;}'
+    'div {padding: 25px;}',
+    'img {max-width: 250px; max-height: 200px;}',
+    '.gameOver {background: #ff4040;}'
   ]
 })
 export class AppComponent {
@@ -54,10 +61,7 @@ export class AppComponent {
 })
 export class SceneComponent {
   @Input() scene: Scene;
+  @Input() gameOver: boolean;
   @Output() selectedOption = new EventEmitter<Option>();
   @Output() reset = new EventEmitter<void>();
-
-  get gameOver(): boolean {
-    return this.scene.opts.length == 0;
-  }
 }
