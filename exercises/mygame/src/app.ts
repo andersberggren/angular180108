@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { myAdventure} from './data';
 import { Scene } from './interfaces';
+import { Option } from './interfaces';
 
 @Component({
   selector: 'app',
@@ -12,7 +13,12 @@ import { Scene } from './interfaces';
       {{currentScene.desc}}
     </p>
     <ul>
-      <li *ngFor="let opt of currentScene.opts">{{opt}}</li>
+      <li *ngFor="let opt of currentScene.opts;">
+        <button (click)="changeScene(opt)">{{opt.desc}}</button>
+      </li>
+      <li *ngIf="isGameOver">
+        <button (click)="reset()">Reset</button>
+      </li>
     </ul>
   `,
   styles: [
@@ -21,8 +27,21 @@ import { Scene } from './interfaces';
 })
 export class AppComponent {
   adventure = myAdventure;
-  gameState = this.adventure.initialGameState;
+  gameState = undefined;
+
   get currentScene(): Scene {
     return myAdventure.scenes[this.gameState.currentSceneId];
+  }
+
+  changeScene(option: Option) {
+    this.gameState.currentSceneId = option.targetSceneId;
+  }
+
+  isGameOver() {
+    return this.currentScene.opts.length == 0;
+  }
+
+  reset() {
+    this.gameState = {...this.adventure.initialGameState};
   }
 }

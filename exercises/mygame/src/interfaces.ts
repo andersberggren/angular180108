@@ -10,7 +10,12 @@ export interface Scene {
     title: string
     imgUrl: string
     desc: string
-    opts: string[]
+    opts: Option[]
+}
+
+export interface Option {
+    targetSceneId: string
+    desc: string
 }
 
 export interface GameState {
