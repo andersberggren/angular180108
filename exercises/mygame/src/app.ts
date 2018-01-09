@@ -1,12 +1,12 @@
 import { Component, Input, EventEmitter, Output } from '@angular/core';
-import { myAdventure} from './data';
 import { Scene, Option, GameState } from './interfaces';
+import { StateHandler } from './stateHandler';
 
 @Component({
   selector: 'app',
   template: `
-    <h1>{{adventure.gameName}}</h1>
-    <scene [scene]="adventure.scenes[gameState.currentSceneId]"
+    <h1>{{stateHandler.gameName}}</h1>
+    <scene [scene]="currentScene"
         (selectedOption)="changeScene($event)" (reset)="reset()"></scene>
   `,
   styles: [
@@ -14,21 +14,20 @@ import { Scene, Option, GameState } from './interfaces';
   ]
 })
 export class AppComponent {
-  adventure = myAdventure;
   gameState: GameState;
+  currentScene: Scene;
 
-  constructor() {
-    this.reset();
+  constructor(public stateHandler: StateHandler) {
+    this.stateHandler.listen((state, currentScene) =>
+        {this.gameState = state; this.currentScene = currentScene});
   }
 
   changeScene(option: Option) {
-    this.gameState.currentSceneId = option.targetSceneId;
-    var currentScene = this.adventure.scenes[this.gameState.currentSceneId];
-    this.gameState.gameOver = currentScene.opts.length == 0;
+    this.stateHandler.changeScene(option);
   }
 
   reset() {
-    this.gameState = {...this.adventure.initialGameState};
+    this.stateHandler.reset();
   }
 }
 
